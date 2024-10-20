@@ -1,24 +1,24 @@
 package com.example.application;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import kotlinx.coroutines.scheduling.Task;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,19 +32,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set up toolbar for logout
-        setSupportActionBar(findViewById(R.id.toolbar));
-
-        // Display the username and current date/time
-        TextView userTextView = findViewById(R.id.usernameTextView);
-        TextView dateTextView = findViewById(R.id.dateTextView);
-
-        userTextView.setText("Welcome, " + username);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String currentDate = sdf.format(new Date());
-        dateTextView.setText(currentDate);
-
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -53,47 +40,60 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(taskAdapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(view -> showAddTaskDialog());
+        fab.setOnClickListener(v -> showAddTaskDialog());
     }
 
     private void showAddTaskDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Add New Task");
-
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_task, null);
+        // Inflate the dialog layout
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_task, null);
         EditText editTextTask = dialogView.findViewById(R.id.editTextTask);
-        builder.setView(dialogView);
+        Button confirmButton = dialogView.findViewById(R.id.confirmButton);
 
-        builder.setPositiveButton("Confirm", (dialog, which) -> {
-            String taskName = editTextTask.getText().toString();
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create();
+
+        confirmButton.setOnClickListener(v -> {
+            String taskName = editTextTask.getText().toString().trim();
             if (!taskName.isEmpty()) {
-                Task newTask = new Task(taskName, false);
-                taskList.add(newTask);
-                taskAdapter.notifyItemInserted(taskList.size() - 1);
-                Toast.makeText(MainActivity.this, "Task added!", Toast.LENGTH_SHORT).show();
+                addTask(taskName); // Add your task to the list
+                dialog.dismiss(); // Dismiss the dialog
             } else {
-                Toast.makeText(MainActivity.this, "Task cannot be empty", Toast.LENGTH_SHORT).show();
+                editTextTask.setError("Task name cannot be empty");
             }
         });
 
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-        builder.show();
+        dialog.show();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
+    private void addTask(String taskName) {
+        Task newTask = new Task(taskName);
+        taskList.add(newTask);
+        taskAdapter.notifyItemInserted(taskList.size() - 1); // Notify adapter of new item
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.logout) {
-            // Handle logout
-            Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
-            finish(); // Close the activity and return to login screen
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    public void showEditDeleteDialog(Task task, int position) {
+        // Inflate the dialog layout
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_edit_delete, null);
+        EditText editTextTask = dialogView.findViewById(R.id.editTextTask);
+        Button editButton = dialogView.findViewById(R.id.editButton);
+        Button deleteButton = dialogView.findViewById(R.id.deleteButton);
+
+        editTextTask.setText(task.getTaskName()); // Pre-fill with current task name
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create();
+
+        // Handle the Delete button click
+        deleteButton.setOnClickListener(v -> {
+            taskList.remove(position);
+            taskAdapter.notifyItemRemoved(position); // Notify adapter of removal
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }

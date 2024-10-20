@@ -11,4 +11,12 @@
         android:layout_height="wrap_content"
         android:hint="Enter task name"
         android:minHeight="48dp" />
+
+    <Button
+        android:id="@+id/confirmButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:layout_gravity="end"
+        android:layout_marginTop="16dp"/>
 </LinearLayout>
