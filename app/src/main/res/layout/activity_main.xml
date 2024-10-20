@@ -10,7 +10,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task List"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp" />
+
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:textColor="@android:color/white"
+            android:background="?attr/selectableItemBackground"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:padding="8dp" />
+    </androidx.appcompat.widget.Toolbar>
 
     <TextView
         android:id="@+id/usernameTextView"

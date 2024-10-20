@@ -4,9 +4,9 @@ public class Task {
     private String taskName;
     private boolean isCompleted;
 
-    public Task(String taskName, boolean isCompleted) {
+    public Task(String taskName) {
         this.taskName = taskName;
-        this.isCompleted = isCompleted;
+        this.isCompleted = false; // By default, a new task is not completed
     }
 
     public String getTaskName() {

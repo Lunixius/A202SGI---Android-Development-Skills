@@ -1,26 +1,21 @@
 package com.example.application;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
-
     private List<Task> taskList;
-    private Context context;
+    private MainActivity mainActivity; // Reference to the MainActivity
 
-    public TaskAdapter(List<Task> taskList, Context context) {
+    public TaskAdapter(List<Task> taskList, MainActivity mainActivity) {
         this.taskList = taskList;
-        this.context = context;
+        this.mainActivity = mainActivity; // Initialize reference
     }
 
     @NonNull
@@ -33,19 +28,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task task = taskList.get(position);
-        holder.textViewTask.setText(task.getTaskName());
-        holder.checkBoxCompleted.setChecked(task.isCompleted());
+        holder.taskName.setText(task.getTaskName());
+        holder.checkBox.setChecked(task.isCompleted());
 
-        holder.checkBoxCompleted.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        // Handle checkbox click
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             task.setCompleted(isChecked);
-            Toast.makeText(context, isChecked ? "Task completed!" : "Task marked as incomplete", Toast.LENGTH_SHORT).show();
         });
 
+        // Handle task item click to show the edit/delete dialog
         holder.itemView.setOnClickListener(v -> {
-            // Logic to delete the task
-            taskList.remove(position);
-            notifyItemRemoved(position);
-            Toast.makeText(context, "Task deleted!", Toast.LENGTH_SHORT).show();
+            mainActivity.showEditDeleteDialog(task, position); // Call the new method in MainActivity
         });
     }
 
@@ -54,14 +47,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return taskList.size();
     }
 
-    static class TaskViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewTask;
-        CheckBox checkBoxCompleted;
+    public static class TaskViewHolder extends RecyclerView.ViewHolder {
+        TextView taskName;
+        CheckBox checkBox;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
-            textViewTask = itemView.findViewById(R.id.textViewTask);
-            checkBoxCompleted = itemView.findViewById(R.id.checkBoxCompleted);
+            taskName = itemView.findViewById(R.id.taskName);
+            checkBox = itemView.findViewById(R.id.checkBox);
         }
     }
 }
