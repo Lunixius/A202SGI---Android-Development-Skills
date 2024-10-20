@@ -1,3 +1,5 @@
+package com.example.application;
+
 public class Task {
 
     private int id; // New ID field
