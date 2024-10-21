@@ -1,12 +1,14 @@
 package com.example.application;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,10 +17,14 @@ public class LoginActivity extends AppCompatActivity {
     Button loginButton;
     TextView registerLink, changePasswordLink;
 
+    TaskDatabaseHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        dbHelper = new TaskDatabaseHelper(this);
 
         userInput = findViewById(R.id.userInput);
         password = findViewById(R.id.password);
@@ -26,53 +32,75 @@ public class LoginActivity extends AppCompatActivity {
         registerLink = findViewById(R.id.registerLink);
         changePasswordLink = findViewById(R.id.changePasswordLink);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String userInputValue = userInput.getText().toString();
-                String passwordInput = password.getText().toString();
+        loginButton.setOnClickListener(view -> {
+            String userInputValue = userInput.getText().toString().trim();
+            String passwordInput = password.getText().toString().trim();
 
-                // Check if userInput is an email or username
-                if (Patterns.EMAIL_ADDRESS.matcher(userInputValue).matches()) {
-                    // It's an email
-                    loginUserWithEmail(userInputValue, passwordInput);
-                } else {
-                    // It's a username
-                    loginUserWithUsername(userInputValue, passwordInput);
-                }
+            if (userInputValue.isEmpty() || passwordInput.isEmpty()) {
+                Toast.makeText(LoginActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Check if the input is an email or username
+            if (Patterns.EMAIL_ADDRESS.matcher(userInputValue).matches()) {
+                // It's an email
+                loginUserWithEmail(userInputValue, passwordInput);
+            } else {
+                // It's a username
+                loginUserWithUsername(userInputValue, passwordInput);
             }
         });
 
-        registerLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Navigate to RegisterActivity
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-            }
+        registerLink.setOnClickListener(view -> {
+            // Navigate to RegisterActivity
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
         });
 
-        changePasswordLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Navigate to ChangePasswordActivity
-                Intent intent = new Intent(LoginActivity.this, ChangePasswordActivity.class);
-                startActivity(intent);
-            }
+        changePasswordLink.setOnClickListener(view -> {
+            // Navigate to ChangePasswordActivity
+            Intent intent = new Intent(LoginActivity.this, ChangePasswordActivity.class);
+            startActivity(intent);
         });
     }
 
+    // Method to login with email
     private void loginUserWithEmail(String email, String password) {
-        // Logic to authenticate with email
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String query = "SELECT * FROM users WHERE email = ? AND password = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{email, password});
+
+        if (cursor.moveToFirst()) {
+            // Login success
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // Close the login activity so the user can't go back to it
+        } else {
+            // Login failure
+            Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+        }
+
+        cursor.close();
+        db.close();
     }
 
+    // Method to login with username
     private void loginUserWithUsername(String username, String password) {
-        // Logic to authenticate with username
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{username, password});
+
+        if (cursor.moveToFirst()) {
+            // Login success
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // Close the login activity so the user can't go back to it
+        } else {
+            // Login failure
+            Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show();
+        }
+
+        cursor.close();
+        db.close();
     }
 }
