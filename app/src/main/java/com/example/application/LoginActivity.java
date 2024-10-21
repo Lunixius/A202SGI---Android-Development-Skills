@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
@@ -69,22 +70,30 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUserWithEmail(String email, String password) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String query = "SELECT * FROM users WHERE email = ? AND password = ?";
-        Cursor cursor = db.rawQuery(query, new String[]{email, password});
-
-        if (cursor.moveToFirst()) {
-            // Login success
-            saveUsername(email); // Save the email in SharedPreferences
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish(); // Close the login activity so the user can't go back to it
-        } else {
-            // Login failure
-            Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(query, new String[]{email, password});
+            if (cursor != null && cursor.moveToFirst()) {
+                // Login success
+                saveUsername(email);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                // Login failure
+                Log.e("LoginError", "Invalid email or password");
+                Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseError", "Error logging in", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
         }
-
-        cursor.close();
-        db.close();
     }
+
 
     // Method to login with username
     private void loginUserWithUsername(String username, String password) {
