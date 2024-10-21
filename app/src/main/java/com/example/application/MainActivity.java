@@ -1,12 +1,16 @@
 package com.example.application;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,12 +23,21 @@ public class MainActivity extends AppCompatActivity {
 
     private TaskAdapter taskAdapter;
     private List<Task> taskList;
-    private TaskDatabaseHelper dbHelper; // Add this for database operations
+    private TaskDatabaseHelper dbHelper; // For database operations
+    private Button logoutButton; // Declare logoutButton
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main); // Ensure this matches your XML layout
+
+        // Retrieve username from SharedPreferences or Intent extras
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", "Guest");
+
+        // Find the TextView and set the username
+        TextView usernameTextView = findViewById(R.id.usernameTextView);
+        usernameTextView.setText("Welcome, " + username); // Set the username
 
         dbHelper = new TaskDatabaseHelper(this); // Initialize the database helper
 
@@ -39,22 +52,39 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> showAddTaskDialog());
+
+        // Initialize the logout button
+        logoutButton = findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Clear session data if necessary
+
+                // Redirect to login page
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear back stack
+                startActivity(intent);
+                finish(); // Close MainActivity
+            }
+        });
     }
 
     // Method to show Add Task dialog
     private void showAddTaskDialog() {
+        // Inflate the dialog_add_task layout
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_add_task, null);
         EditText editTextTask = dialogView.findViewById(R.id.editTextTask);
 
+        // Create and show the dialog
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(dialogView)
                 .setCancelable(true)
                 .create();
 
-        dialog.findViewById(R.id.confirmButton).setOnClickListener(v -> {
+        dialogView.findViewById(R.id.confirmButton).setOnClickListener(v -> {
             String taskName = editTextTask.getText().toString().trim();
             if (!taskName.isEmpty()) {
-                addTask(taskName);
+                addTask(taskName); // Add the task to the database
                 dialog.dismiss();
             } else {
                 editTextTask.setError("Task name cannot be empty");
@@ -63,15 +93,13 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    // Method to add task to the database and list
+    // Method to add task to the database and reload tasks
     private void addTask(String taskName) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        // Insert task into the database
         db.execSQL("INSERT INTO tasks (taskName, completed) VALUES (?, 0)", new Object[]{taskName});
 
-        // Reload tasks from the database after insertion
-        taskList.clear(); // Clear the existing list
+        // Reload tasks from the database after adding a new one
+        taskList.clear();
         loadTasksFromDatabase();
     }
 
@@ -108,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 .create();
 
         // Update Task
-        dialog.findViewById(R.id.editButton).setOnClickListener(v -> {
+        dialogView.findViewById(R.id.editButton).setOnClickListener(v -> {
             String updatedTaskName = editTextTask.getText().toString().trim();
             if (!updatedTaskName.isEmpty()) {
                 updateTaskInDatabase(task.getId(), updatedTaskName);
@@ -121,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Delete Task
-        dialog.findViewById(R.id.deleteButton).setOnClickListener(v -> {
+        dialogView.findViewById(R.id.deleteButton).setOnClickListener(v -> {
             deleteTaskFromDatabase(task.getId());
             taskList.remove(position);
             taskAdapter.notifyItemRemoved(position);

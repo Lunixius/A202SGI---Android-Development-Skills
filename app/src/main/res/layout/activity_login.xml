@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -12,64 +13,69 @@
         android:id="@+id/userInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username or Email"
-        android:inputType="textEmailAddress"
-        android:padding="16dp"
         android:layout_marginBottom="12dp"
+        android:autofillHints="username,email"
         android:background="@android:drawable/editbox_background"
         android:elevation="2dp"
+        android:hint="@string/username_or_email_hint"
+        android:inputType="textEmailAddress"
+        android:padding="16dp"
         android:textColor="@android:color/black"
-        android:hintTextColor="@android:color/darker_gray"
-        android:textSize="16sp" />
+        android:textColorHint="#757575"
+        android:textSize="16sp"
+        tools:ignore="VisualLintTextFieldSize" />
 
     <!-- Password Field -->
     <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:padding="16dp"
         android:layout_marginBottom="20dp"
+        android:autofillHints="password"
         android:background="@android:drawable/editbox_background"
         android:elevation="2dp"
+        android:hint="@string/password_hint"
+        android:inputType="textPassword"
+        android:padding="16dp"
         android:textColor="@android:color/black"
-        android:hintTextColor="@android:color/darker_gray"
-        android:textSize="16sp" />
+        android:textColorHint="#757575"
+        android:textSize="16sp"
+        tools:ignore="VisualLintTextFieldSize" />
 
     <!-- Change Password Link -->
     <TextView
         android:id="@+id/changePasswordLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgot Password?"
-        android:textColor="@android:color/holo_blue_dark"
         android:layout_gravity="end"
         android:layout_marginBottom="16dp"
-        android:textSize="14sp"
-        android:paddingTop="8dp" />
+        android:paddingTop="8dp"
+        android:text="@string/forgot_password"
+        android:textColor="#0277BD"
+        android:textSize="14sp" />
 
     <!-- Login Button -->
     <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Log In"
-        android:padding="16dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@android:color/holo_blue_light"
-        android:textColor="@android:color/white"
+        android:elevation="3dp"
+        android:padding="16dp"
+        android:text="@string/login_button"
+        android:textColor="#4E342E"
         android:textSize="18sp"
-        android:elevation="3dp" />
+        tools:ignore="VisualLintButtonSize" />
 
     <!-- Register Link -->
     <TextView
         android:id="@+id/registerLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Don't have an account? Register"
-        android:textColor="@android:color/holo_blue_dark"
         android:layout_gravity="center"
-        android:textSize="14sp"
-        android:paddingTop="8dp" />
+        android:paddingTop="8dp"
+        android:text="@string/register_prompt"
+        android:textColor="#0277BD"
+        android:textSize="14sp" />
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.example.application;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -72,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (cursor.moveToFirst()) {
             // Login success
+            saveUsername(email); // Save the email in SharedPreferences
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish(); // Close the login activity so the user can't go back to it
@@ -92,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (cursor.moveToFirst()) {
             // Login success
+            saveUsername(username); // Save the username in SharedPreferences
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish(); // Close the login activity so the user can't go back to it
@@ -102,5 +105,13 @@ public class LoginActivity extends AppCompatActivity {
 
         cursor.close();
         db.close();
+    }
+
+    // Method to save username in SharedPreferences
+    private void saveUsername(String username) {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", username);
+        editor.apply(); // or editor.commit();
     }
 }
