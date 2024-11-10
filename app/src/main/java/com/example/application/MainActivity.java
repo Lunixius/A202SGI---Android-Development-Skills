@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private TaskAdapter taskAdapter;
     private List<Task> taskList;
     private TaskDatabaseHelper dbHelper; // For database operations
-    private Button logoutButton; // Declare logoutButton
+    private Button notesButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,20 +53,19 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> showAddTaskDialog());
 
-        // Initialize the logout button
-        logoutButton = findViewById(R.id.logoutButton);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
+        // Find the back button (previously logout button)
+        Button backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Clear session data if necessary
-
-                // Redirect to login page
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear back stack
+                // Navigate back to HomepageActivity
+                Intent intent = new Intent(MainActivity.this, HomepageActivity.class);
                 startActivity(intent);
                 finish(); // Close MainActivity
             }
         });
+
+
     }
 
     // Method to show Add Task dialog

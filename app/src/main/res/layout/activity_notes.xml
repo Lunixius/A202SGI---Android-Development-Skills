@@ -1,0 +1,74 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Header Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:gravity="start|center_vertical">
+
+        <!-- Back Button -->
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="67dp"
+            android:layout_height="56dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Back Button"
+            android:src="@android:drawable/ic_menu_revert" />
+
+        <!-- Page Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="Notepad"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+    <!-- Input for Title -->
+    <EditText
+        android:id="@+id/titleInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter note title"
+        android:minHeight="48dp"
+        android:padding="10dp"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp" />
+
+    <!-- Input for Content -->
+    <EditText
+        android:id="@+id/contentInput"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:hint="Enter note content"
+        android:textSize="14sp"
+        android:padding="10dp"
+        android:gravity="top|start"
+        android:layout_marginTop="8dp" />
+
+    <!-- Save Button -->
+    <Button
+        android:id="@+id/saveNoteButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Note"
+        android:layout_marginTop="16dp"/>
+
+    <!-- RecyclerView to display notes -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

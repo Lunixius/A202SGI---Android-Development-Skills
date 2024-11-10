@@ -23,10 +23,10 @@
             android:layout_marginStart="16dp" />
 
         <Button
-            android:id="@+id/logoutButton"
+            android:id="@+id/backButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Logout"
+            android:text="Back"
             android:textColor="@android:color/white"
             android:background="?attr/selectableItemBackground"
             android:layout_gravity="end"
@@ -54,6 +54,7 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
+    <!-- Floating Action Button for Task List (Bottom Right) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -61,6 +62,5 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_input_add" />
-
 
 </LinearLayout>

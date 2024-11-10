@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             if (cursor != null && cursor.moveToFirst()) {
                 // Login success
                 saveUsername(email);
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, HomepageActivity.class);
                 startActivity(intent);
                 finish();
             } else {
@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
         if (cursor.moveToFirst()) {
             // Login success
             saveUsername(username); // Save the username in SharedPreferences
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, HomepageActivity.class);
             startActivity(intent);
             finish(); // Close the login activity so the user can't go back to it
         } else {

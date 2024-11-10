@@ -26,5 +26,7 @@
     <string name="clear_history">clear_history</string>
     <string name="back">back\n</string>
     <string name="task_completion_history">Task Completion History</string>
+    <string name="messaging">Messaging</string>
+    <string name="delete">Delete</string>
 
 </resources>
