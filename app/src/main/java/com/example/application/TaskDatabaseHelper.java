@@ -31,5 +31,15 @@ public class TaskDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
         onCreate(db);
     }
+
+    public void updateTaskCompletionStatus(int taskId, int completed) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("completed", completed);
+
+        db.update("tasks", values, "id = ?", new String[]{String.valueOf(taskId)});
+        db.close();
+    }
+
 }
 

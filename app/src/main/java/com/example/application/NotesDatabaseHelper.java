@@ -69,7 +69,6 @@ public class NotesDatabaseHelper extends SQLiteOpenHelper {
                 note.setId(cursor.getInt(cursor.getColumnIndex(COLUMN_ID)));
                 note.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_TITLE)));
                 note.setContent(cursor.getString(cursor.getColumnIndex(COLUMN_CONTENT)));
-                note.setTimestamp(cursor.getString(cursor.getColumnIndex(COLUMN_TIMESTAMP)));
 
                 notes.add(note);
             } while (cursor.moveToNext());

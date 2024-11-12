@@ -43,16 +43,6 @@ public class Task {
         this.completed = completed;
     }
 
-    // Optional: Convenience method to mark a task as completed
-    public void markCompleted() {
-        this.completed = true;
-    }
-
-    // Optional: Toggle the completion status
-    public void toggleCompleted() {
-        this.completed = !this.completed;
-    }
-
     // Override toString() for easy debugging or logging
     @Override
     public String toString() {

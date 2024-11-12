@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     private TaskAdapter taskAdapter;
     private List<Task> taskList;
     private TaskDatabaseHelper dbHelper; // For database operations
-    private Button notesButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

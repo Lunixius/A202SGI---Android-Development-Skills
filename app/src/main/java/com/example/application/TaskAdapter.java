@@ -29,28 +29,34 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        Task task = taskList.get(holder.getAdapterPosition());  // Use getAdapterPosition()
+        Task task = taskList.get(position);
 
         holder.taskName.setText(task.getTaskName());
 
-        // Temporarily remove listener to avoid triggering on re-binding
-        holder.checkBox.setOnCheckedChangeListener(null);
+        // Set CheckBox based on the completed status from the database
+        holder.checkBox.setOnCheckedChangeListener(null); // Temporarily remove listener
         holder.checkBox.setChecked(task.isCompleted());
 
-        // Set CheckBox state based on task completion
+        // Add listener to update the completed status in the database
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             task.setCompleted(isChecked);
-            // Optionally, save the task's completed status in the database here
-            // Example: ((MainActivity) context).updateTask(task);
+
+            // Update the completed status in the database
+            TaskDatabaseHelper dbHelper = new TaskDatabaseHelper(context);
+            dbHelper.updateTaskCompletionStatus(task.getId(), isChecked ? 1 : 0);
+
+            // Optionally, refresh the item to ensure UI consistency
+            notifyItemChanged(position);
         });
 
         // Handle click on task item to show Edit/Delete dialog
-        holder.itemView.setOnClickListener(v -> handleTaskItemClick(task, holder.getAdapterPosition()));
+        holder.itemView.setOnClickListener(v -> handleTaskItemClick(task, position));
     }
 
     private void handleTaskItemClick(Task task, int position) {
         ((MainActivity) context).showEditDeleteDialog(task, position);
     }
+
 
     @Override
     public int getItemCount() {

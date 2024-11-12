@@ -4,7 +4,6 @@ public class Note {
     private int id;
     private String title;
     private String content;
-    private String timestamp;
 
     // Constructor
     public Note() {
@@ -40,11 +39,4 @@ public class Note {
         this.content = content;
     }
 
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
 }
